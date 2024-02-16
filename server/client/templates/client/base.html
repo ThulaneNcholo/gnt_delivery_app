@@ -54,27 +54,55 @@
         text-decoration: none;
         color: inherit;
       }
+
+      .spinner {
+        display: none; /* Hide the spinner by default */
+      }
+
+      .spinner_container {
+        height: 100%;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .spinner-grow {
+        color: var(--secondary_color);
+        height: 50px;
+        width: 50px;
+      }
     </style>
 
     <title>Food Delivery</title>
   </head>
   <body>
-    <!-- ======= Navbar  ======= -->
-    {% include 'partials/navbar.html' %}
+    <section id="content">
+      <!-- ======= Navbar  ======= -->
+      {% include 'partials/navbar.html' %}
 
-    <!-- ======= Content  ======= -->
-    {% block content %} {% endblock %}
+      <!-- ======= Content  ======= -->
+      {% block content %} {% endblock %}
 
-    <!-- ======= Bottom Navbar  ======= -->
-    {% if show_bottom_navbar == "False" %}
-    <!-- divider  -->
-    {% else %}
-    <!-- divider  -->
-    {% include 'partials/bottom_navbar.html' %}
-    <!-- divider  -->
-    {% endif %}
+      <!-- ======= Bottom Navbar  ======= -->
+      {% if show_bottom_navbar == "False" %}
+      <!-- divider  -->
+      {% else %}
+      <!-- divider  -->
+      {% include 'partials/bottom_navbar.html' %}
+      <!-- divider  -->
+      {% endif %}
 
-    <div style="height: 200px; width: 100%"></div>
+      <div style="height: 200px; width: 100%"></div>
+    </section>
+
+    <section class="container spinner" id="spinner" style="margin-top: 100px">
+      <center>
+        <div class="spinner-grow" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>
+      </center>
+    </section>
 
     <!-- Option 1: Bootstrap Bundle with Popper -->
     <script
@@ -82,5 +110,31 @@
       integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
       crossorigin="anonymous"
     ></script>
+
+    <script>
+      // Function to show the spinner
+      function showSpinner() {
+        document.getElementById("spinner").style.display = "block";
+        document.getElementById("content").style.display = "none";
+      }
+
+      // Function to hide the spinner
+      function hideSpinner() {
+        document.getElementById("spinner").style.display = "none";
+        document.getElementById("content").style.display = "block";
+      }
+
+      // Event listener for DOMContentLoaded event
+      document.addEventListener("DOMContentLoaded", function () {
+        // Show spinner when DOM content is loaded
+        showSpinner();
+      });
+
+      // Event listener for load event
+      window.addEventListener("load", function () {
+        // Hide spinner when all external resources are loaded
+        hideSpinner();
+      });
+    </script>
   </body>
 </html>

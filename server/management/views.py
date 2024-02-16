@@ -5,11 +5,11 @@ from cart.models import *
 
 # Create your views here.
 def DashboardView(request):
-    pending_orders = CartModel.objects.filter(status = "Pending").order_by("-date_created")
+    pending_orders = CartModel.objects.filter(status = "Pending").order_by("date_created")
     pendingCount = pending_orders.count()
-    deliveries_orders = CartModel.objects.filter(status = "Delivery").order_by("-date_created")
+    deliveries_orders = CartModel.objects.filter(status = "Delivery").order_by("date_created")
     deliveriesCount = deliveries_orders.count()
-    complete_orders = CartModel.objects.filter(status = "Complete").order_by("-date_created")
+    complete_orders = CartModel.objects.filter(status = "Complete").order_by("date_created")
     completeCount = complete_orders.count()
 
     context = {

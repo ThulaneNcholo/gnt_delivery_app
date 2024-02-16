@@ -31,49 +31,59 @@
         ></button>
       </div>
       <div class="modal-body py-5">
-        <center>
-          <h5 class="mb-4">Quantity</h5>
-        </center>
-        <form method="POST">
-          {% csrf_token %}
-          <input type="text" value="{{data.id}}" hidden name="itemID" />
-          <input
-            type="text"
-            id="userName{{data.id}}"
-            name="currentUser"
-            hidden
-          />
-
-          <!-- New qty  -->
-          <div class="d-flex justify-content-center">
-            <i
-              class="bi bi-dash-circle-fill quantity_icon"
-              onclick="DecreaseQty('{{data.id}}')"
-            ></i>
+        <div id="myForm">
+          <center>
+            <h5 class="mb-4">Quantity</h5>
+          </center>
+          <form method="POST">
+            {% csrf_token %}
+            <input type="text" value="{{data.id}}" hidden name="itemID" />
             <input
               type="text"
-              value="1"
-              id="quantityID{{data.id}}"
-              name="quantity"
+              id="userName{{data.id}}"
+              name="currentUser"
               hidden
             />
-            <h5 class="mx-3 fw-bold mb-0" id="numberQty{{data.id}}">1</h5>
-            <i
-              class="bi bi-plus-circle-fill quantity_icon"
-              onclick="IncreaseQty('{{data.id}}')"
-            ></i>
-          </div>
+
+            <!-- New qty  -->
+            <div class="d-flex justify-content-center">
+              <i
+                class="bi bi-dash-circle-fill quantity_icon"
+                onclick="DecreaseQty('{{data.id}}')"
+              ></i>
+              <input
+                type="text"
+                value="1"
+                id="quantityID{{data.id}}"
+                name="quantity"
+                hidden
+              />
+              <h5 class="mx-3 fw-bold mb-0" id="numberQty{{data.id}}">1</h5>
+              <i
+                class="bi bi-plus-circle-fill quantity_icon"
+                onclick="IncreaseQty('{{data.id}}')"
+              ></i>
+            </div>
+            <center>
+              <button
+                type="submit"
+                name="add_to_cart"
+                class="btn btn-dark px-5 rounded-pill mt-4"
+                onclick="CheckUser('{{data.id}}')"
+              >
+                add to cart
+              </button>
+            </center>
+          </form>
+        </div>
+
+        <div class="mt-3" id="formSpinner" style="display: none">
           <center>
-            <button
-              type="submit"
-              name="add_to_cart"
-              class="btn btn-dark px-5 rounded-pill mt-4"
-              onclick="CheckUser('{{data.id}}')"
-            >
-              add to cart
-            </button>
+            <div class="spinner-grow" role="status">
+              <span class="visually-hidden">Loading...</span>
+            </div>
           </center>
-        </form>
+        </div>
       </div>
     </div>
   </div>
@@ -102,6 +112,8 @@
 
   function CheckUser(itemId) {
     const userSession = localStorage.getItem("userID");
+    document.getElementById("myForm").style.display = "none";
+    document.getElementById("formSpinner").style.display = "block";
 
     if (userSession == null) {
       const timestamp = new Date().getTime(); // Get current timestamp
