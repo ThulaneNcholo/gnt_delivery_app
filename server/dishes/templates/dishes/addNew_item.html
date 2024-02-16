@@ -1,0 +1,119 @@
+{% extends 'management/management_base.html' %}
+<!-- divider  -->
+{% load static %}
+<!-- divider  -->
+{% block content %}
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .btn_add {
+    background-color: var(--primary_color);
+    color: white;
+    border-radius: 12px;
+  }
+</style>
+
+<section class="container mt-5">
+  <h5>New Item</h5>
+</section>
+
+<!-- ======= Form start  ======= -->
+<section class="container mt-5">
+  <form method="POST" autocomplete="off" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="row">
+      <div class="col-6">
+        <div class="mb-4">
+          <label for="formFile" class="form-label">Image</label>
+          <input
+            class="form-control bg-light"
+            type="file"
+            id="formFile"
+            name="coverImage"
+          />
+        </div>
+        <!-- end input  -->
+        <div class="form-floating mb-3">
+          <input
+            type="text"
+            class="form-control bg-light"
+            id="floatingInput"
+            placeholder="Name"
+            name="itemName"
+          />
+          <label for="floatingInput">Name</label>
+        </div>
+        <!-- end input  -->
+        <div class="form-floating mb-4">
+          <input
+            type="number"
+            class="form-control bg-light"
+            id="floatingInput"
+            placeholder="Price"
+            name="price"
+          />
+          <label for="floatingInput">Price</label>
+        </div>
+        <!-- end input  -->
+        <div class="mb-5">
+          <label for="exampleFormControlTextarea1" class="form-label"
+            >description about meal</label
+          >
+          <textarea
+            class="form-control bg-light"
+            id="exampleFormControlTextarea1"
+            name="description"
+            rows="5"
+          ></textarea>
+        </div>
+        <!-- end input  -->
+      </div>
+      <div class="col">
+        <div class="row mt-4">
+          <div class="col-8">
+            <div class="form-floating mb-5">
+              <input
+                type="text"
+                class="form-control bg-light"
+                id="floatingInput"
+                name="new_item"
+                placeholder="Ingredients"
+              />
+              <label for="floatingInput">Ingredients</label>
+              <div id="emailHelp" class="form-text">
+                Eg.Beef Patty, Tomatoes, Lettuce, Egg
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <button
+              class="btn btn-dark w-100 py-3"
+              type="submit"
+              hx-post="{% url 'add-ingredient' %}"
+              hx-target="#IngredientsID"
+            >
+              <i class="bi bi-plus-circle-fill mx-2"></i>add ingredients
+            </button>
+          </div>
+        </div>
+        <div id="IngredientsID">
+          {% include 'partials/IngredientPartial.html' %}
+        </div>
+      </div>
+    </div>
+    <center>
+      <button
+        class="btn btn_add px-5 py-2 mt-5"
+        type="submit"
+        name="submitItem"
+      >
+        Submit Menu Item
+      </button>
+    </center>
+  </form>
+</section>
+
+{% endblock %}

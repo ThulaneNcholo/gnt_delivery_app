@@ -1,0 +1,118 @@
+{% extends 'management/management_base.html' %}
+<!-- divider  -->
+{% load static %}
+<!-- divider  -->
+{% block content %}
+
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .table_heading {
+    background-color: var(--secondary_color);
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+  }
+
+  .font_style {
+    font-size: 14px;
+  }
+
+  .empty_image {
+    height: 100px;
+    width: 100%;
+    object-fit: contain;
+  }
+</style>
+
+<!-- ======= Orders  ======= -->
+<section class="container mt-5">
+  <h3>All Orders</h3>
+</section>
+
+<section class="container mt-5">
+  <!-- ======= Table Headings  ======= -->
+  <div class="px-3 py-4 table_heading shadow-sm">
+    <div class="row">
+      <div class="col">
+        <h6 class="mb-0">Order</h6>
+      </div>
+      <div class="col">
+        <h6 class="mb-0">Customer</h6>
+      </div>
+      <div class="col">
+        <h6 class="mb-0">Total</h6>
+      </div>
+      <div class="col">
+        <h6 class="mb-0">Payment</h6>
+      </div>
+      <div class="col">
+        <h6 class="mb-0">Pay Status</h6>
+      </div>
+      <div class="col">
+        <h6 class="mb-0">Status</h6>
+      </div>
+      <div class="col">
+        <h6 class="mb-0">View</h6>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= Table Row  ======= -->
+  {% for data in orders %}
+  <div class="p-3 shadow-sm">
+    <div class="row">
+      <div class="col">
+        <p class="mb-0">{{data.orderNumber}}</p>
+      </div>
+      <div class="col">
+        <p class="mb-0">{{data.customer.firstName}}</p>
+      </div>
+      <div class="col">
+        <p class="mb-0">R{{data.total}}</p>
+      </div>
+      <div class="col">
+        <p class="mb-0">{{data.payment_method}}</p>
+      </div>
+      <div class="col">
+        <p class="mb-0">{{data.payment_status}}</p>
+      </div>
+      <div class="col">
+        {% if data.status == "Pending" %}
+        <div class="alert alert-secondary p-0 rounded-pill" role="alert">
+          <center>{{data.status}}</center>
+        </div>
+        {% elif data.status == "Delivery" %}
+        <div class="alert alert-primary p-0 rounded-pill" role="alert">
+          <center>{{data.status}}</center>
+        </div>
+        {% elif data.status == "Complete" %}
+        <div class="alert alert-warning p-0 rounded-pill" role="alert">
+          <center>{{data.status}}</center>
+        </div>
+        {% endif %}
+      </div>
+      <div class="col">
+        <a href="{% url 'order' data.id %}">
+          <button class="btn btn-dark font_style">view</button>
+        </a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="px-3 py-5 shadow-sm">
+    <center>
+      <img
+        src="{% static '/images/no_ingredients.svg' %}"
+        alt=""
+        class="empty_image mt-3"
+      />
+      <h6 class="my-3">No Orders Created</h6>
+    </center>
+  </div>
+  {% endfor %}
+</section>
+
+{% endblock %}

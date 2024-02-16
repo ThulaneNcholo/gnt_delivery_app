@@ -1,0 +1,100 @@
+{% extends 'client/base.html' %}
+<!-- divider  -->
+{% load static %}
+<!-- divider  -->
+{% block content %}
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .special_img {
+    height: 100px;
+    width: 100px;
+    margin-right: 12px;
+    border-radius: 12px;
+    object-fit: cover;
+  }
+
+  .original_price {
+    font-size: 14px;
+    text-decoration: line-through;
+    margin-left: 10px;
+  }
+
+  .price_style {
+    color: var(--primary_color);
+  }
+
+  .view_special {
+    font-size: 12px;
+  }
+</style>
+
+<!-- ======= Specials  ======= -->
+<section class="container mt-5">
+  <h3 class="mb-5">Specials</h3>
+  <div class="row">
+    {% for data in specials %}
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+      <div>
+        <div class="d-flex">
+          <img src="{{data.cover_image.url}}" alt="" class="special_img" />
+          <div>
+            <h6 class="mb-2">{{data.name}}</h6>
+            <div class="d-flex">
+              <h4 class="mb-0 price_style fw-bold">R{{data.sale_price}}</h4>
+              <p class="mb-0 original_price">R{{data.price}}</p>
+            </div>
+            <a href="{% url 'dish-details' data.id %}">
+              <button class="btn btn-dark rounded-pill view_special mt-2">
+                view
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+<!-- ======= Popular Dishes  ======= -->
+<section class="container mt-5">
+  <h3 class="mb-5">Popular Dishes</h3>
+  <div class="row">
+    {% for data in popular_dishes %}
+    <div class="col-12 col-md-6 col-lg-4 mb-4">
+      <div>
+        <div class="d-flex">
+          <img src="{{data.cover_image.url}}" alt="" class="special_img" />
+          <div>
+            <h6 class="mb-2">{{data.name}}</h6>
+            {% if data.sale_status == "Sale" %}
+            <div class="d-flex">
+              <h4 class="mb-0 price_style fw-bold">R{{data.sale_price}}</h4>
+              <p class="mb-0 original_price">R{{data.price}}</p>
+            </div>
+            {% elif data.sale_status == "Hero" %}
+            <div class="d-flex">
+              <h4 class="mb-0 price_style fw-bold">R{{data.sale_price}}</h4>
+              <p class="mb-0 original_price">R{{data.price}}</p>
+            </div>
+            {% else %}
+            <h4 class="mb-0 price_style fw-bold">R{{data.price}}</h4>
+            {% endif %}
+            <a href="{% url 'dish-details' data.id %}">
+              <button class="btn btn-dark rounded-pill view_special mt-2">
+                view
+              </button>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+</section>
+
+{% endblock %}

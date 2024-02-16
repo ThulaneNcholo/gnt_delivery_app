@@ -1,0 +1,69 @@
+{% load static %}
+
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .sidebar_icon {
+    font-size: 22px;
+    color: var(--secondary_color);
+    margin-right: 12px;
+  }
+
+  .hover_style:hover {
+    background-color: var(--secondary_color);
+    color: white !important;
+    border-radius: 12px;
+    cursor: pointer;
+  }
+
+  .our_company {
+    font-weight: bolder;
+    color: #d1762c;
+  }
+</style>
+
+<div class="p-2 pt-5" style="height: 100vh">
+  <div class="container">
+    <center>
+      <img
+        src="{% static '/images/orage_delivery.svg' %}"
+        alt=""
+        class="img-fluid mb-3"
+      />
+      <h3 class="mb-5 fw-bold our_company">GNT TECHNOLOGY</h3>
+    </center>
+  </div>
+  <a href="{% url 'index' %}">
+    <div class="d-flex align-items-center mb-2 hover_style p-2">
+      <i class="bi bi-globe sidebar_icon"></i>
+      <p class="mb-0">Website</p>
+    </div>
+  </a>
+  <!-- end item  -->
+
+  <a href="{% url 'dashboard' %}">
+    <div class="d-flex align-items-center mb-2 hover_style p-2">
+      <i class="bi bi-house sidebar_icon"></i>
+      <p class="mb-0">Dashboard</p>
+    </div>
+  </a>
+  <!-- end item  -->
+  <a href="{% url 'list-orders' %}">
+    <div class="d-flex align-items-center mb-2 hover_style p-2">
+      <i class="bi bi-receipt-cutoff sidebar_icon"></i>
+      <p class="mb-0">Orders</p>
+    </div>
+  </a>
+
+  <!-- end item  -->
+  <a href="{% url 'menu-items' %}">
+    <div class="d-flex align-items-center mb-2 hover_style p-2">
+      <i class="bi bi-box-seam sidebar_icon"></i>
+      <p class="mb-0">Menu</p>
+    </div>
+  </a>
+  <!-- end item  -->
+</div>

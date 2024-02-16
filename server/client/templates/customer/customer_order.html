@@ -1,0 +1,219 @@
+{% extends 'client/base.html' %}
+<!-- divider  -->
+{% load static %}
+<!-- divider  -->
+{% block content %}
+
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .btn_banner {
+    background-color: var(--primary_color);
+    color: white;
+    border-radius: 12px;
+  }
+
+  .order_banner {
+    width: 100%;
+    background-size: cover;
+    background-position: center;
+    padding-top: 60px;
+    padding-bottom: 60px;
+  }
+
+  .order_icon_container {
+    width: 70px; /* Adjust size as needed */
+    height: 70px; /* Adjust size as needed */
+    /* border-radius: 50%; */
+    background-color: var(
+      --secondary_color
+    ); /* Adjust background color as needed */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 12px;
+    margin-right: 12px;
+  }
+
+  .order_icon {
+    font-size: 30px;
+    color: white;
+  }
+
+  .card_style {
+    border-radius: 12px;
+  }
+
+  .btn_reload {
+    background-color: var(--primary_color);
+    color: white;
+    border-radius: 12px;
+  }
+
+  .hidden {
+    display: none;
+  }
+
+  .cross_price {
+    text-decoration: line-through;
+    font-size: 14px;
+  }
+</style>
+
+<script>
+  window.onload = function () {
+    let currentUser = localStorage.getItem("userID");
+
+    if (
+      currentUser !== null &&
+      currentUser !== undefined &&
+      currentUser !== ""
+    ) {
+      // Code to execute if the currentUser is not empty
+      document.getElementById("div2").classList.remove("hidden");
+    } else {
+      // Code to execute if the currentUser is empty
+      document.getElementById("div1").classList.remove("hidden");
+    }
+  };
+</script>
+
+<!-- ======= Order Banner   ======= -->
+<section>
+  <div
+    class="order_banner"
+    style="background-image: linear-gradient(rgba(0, 0, 0, 0.5),rgba(0, 0, 0, 0.5)), url({{hero_dish.cover_image.url}});"
+  >
+    <div class="container">
+      <center>
+        <h3 class="fw-bold text-white">{{hero_dish.name}}</h3>
+        <p class="text-white px-3">
+          {{hero_dish.description|truncatewords:16}}
+        </p>
+        <h4 class="fw-bold text-white">R{{hero_dish.sale_price}}</h4>
+        <p class="cross_price text-white">R{{hero_dish.price}}</p>
+        <button class="btn btn_banner px-5 mt-3 bg-light text-dark">Order Now</button>
+      </center>
+    </div>
+  </div>
+</section>
+
+{% if sessionUser == "Yes" %}
+<section class="container mt-5">
+  {% if orders %}
+  <h3 class="mb-5">My Orders</h3>
+  <div class="row">
+    {% for data in orders %}
+    <div class="col-12 col-md-6 col-lg-4 mb-5">
+      <div>
+        {% if data.status == "Pending" %}
+        <div class="d-flex">
+          <div class="order_icon_container mb-3">
+            <i class="bi bi-receipt order_icon"></i>
+          </div>
+          <div>
+            <p class="mb-1">
+              Order - {{data.orderNumber}} -
+              <span class="fw-bold">Preparing order</span>
+            </p>
+            <a href="{% url 'order-status' data.id %}">
+              <button class="btn btn-dark" style="font-size: 14px">
+                view order
+              </button>
+            </a>
+          </div>
+        </div>
+        {% elif data.status == "Delivery" %}
+        <div class="d-flex">
+          <div class="order_icon_container mb-3">
+            <i class="bi bi-truck order_icon"></i>
+          </div>
+          <div>
+            <p class="mb-1">
+              Order - {{data.orderNumber}} -
+              <span class="fw-bold">Out for delivery</span>
+            </p>
+            <a href="{% url 'order-status' data.id %}">
+              <button class="btn btn-dark" style="font-size: 14px">
+                view order
+              </button>
+            </a>
+          </div>
+        </div>
+        {% elif data.status == "Complete" %}
+        <div class="d-flex">
+          <div class="order_icon_container mb-3">
+            <i class="bi bi-cart-check-fill order_icon"></i>
+          </div>
+          <div>
+            <p class="mb-1">
+              Order - {{data.orderNumber}} -
+              <span class="fw-bold">Delivered</span>
+            </p>
+            <a href="{% url 'order-status' data.id %}">
+              <button class="btn btn-dark" style="font-size: 14px">
+                view order
+              </button>
+            </a>
+          </div>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <center>
+    <h5>You currently have no orders, place order now</h5>
+    <a href="{% url 'index' %}">
+      <button class="btn btn_reload px-5 py-3 fw-bold mt-4">Browse Menu</button>
+    </a>
+  </center>
+  {% endif %}
+</section>
+{% endif %}
+
+<!-- divider  -->
+
+{% if sessionUser == "No" %}
+<section class="container mt-5 hidden" id="div1">
+  <center>
+    <h5>You currently have no orders, place order now</h5>
+    <a href="{% url 'index' %}">
+      <button class="btn btn_reload px-5 py-3 fw-bold mt-4">Browse Menu</button>
+    </a>
+  </center>
+</section>
+<!-- ======= section divider   ======= -->
+<section class="container mt-5 hidden" id="div2">
+  <center>
+    <h5>
+      Sorry there was a problem loading your orders please click button below to
+      refresh them
+    </h5>
+    <form method="POST">
+      {% csrf_token %}
+      <input type="text" id="userInput" hidden name="userID" />
+      <button
+        type="submit"
+        name="reload_user"
+        class="btn btn_reload px-5 py-3 fw-bold mt-4"
+        onclick="CheckUser()"
+      >
+        Reload Data
+      </button>
+    </form>
+  </center>
+</section>
+{% endif %}
+
+<script>
+  function CheckUser() {
+    let currentUser = localStorage.getItem("userID");
+    document.getElementById("userInput").value = currentUser;
+  }
+</script>
+{% endblock %}

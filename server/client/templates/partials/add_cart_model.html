@@ -1,0 +1,120 @@
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .quantity_icon {
+    font-size: 25px;
+    color: var(--secondary_color) !important;
+    cursor: pointer;
+  }
+</style>
+
+<!-- Modal -->
+<div
+  class="modal fade"
+  id="cartModal{{data.id}}"
+  tabindex="-1"
+  aria-labelledby="cartModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="cartModalLabel">{{data.name}}</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body py-5">
+        <center>
+          <h5 class="mb-4">Quantity</h5>
+        </center>
+        <form method="POST">
+          {% csrf_token %}
+          <input type="text" value="{{data.id}}" hidden name="itemID" />
+          <input
+            type="text"
+            id="userName{{data.id}}"
+            name="currentUser"
+            hidden
+          />
+
+          <!-- New qty  -->
+          <div class="d-flex justify-content-center">
+            <i
+              class="bi bi-dash-circle-fill quantity_icon"
+              onclick="DecreaseQty('{{data.id}}')"
+            ></i>
+            <input
+              type="text"
+              value="1"
+              id="quantityID{{data.id}}"
+              name="quantity"
+              hidden
+            />
+            <h5 class="mx-3 fw-bold mb-0" id="numberQty{{data.id}}">1</h5>
+            <i
+              class="bi bi-plus-circle-fill quantity_icon"
+              onclick="IncreaseQty('{{data.id}}')"
+            ></i>
+          </div>
+          <center>
+            <button
+              type="submit"
+              name="add_to_cart"
+              class="btn btn-dark px-5 rounded-pill mt-4"
+              onclick="CheckUser('{{data.id}}')"
+            >
+              add to cart
+            </button>
+          </center>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  function IncreaseQty(itemId) {
+    quantity = document.getElementById("quantityID" + itemId).value;
+    newQuantity = parseInt(quantity) + 1;
+    document.getElementById("quantityID" + itemId).value = newQuantity;
+    document.getElementById("numberQty" + itemId).innerHTML = newQuantity;
+  }
+
+  function DecreaseQty(itemId) {
+    quantity = document.getElementById("quantityID" + itemId).value;
+
+    if (quantity <= 1) {
+      document.getElementById("quantityID" + itemId).value = 1;
+      document.getElementById("numberQty" + itemId).innerHTML = 1;
+    } else {
+      newQuantity = parseInt(quantity) - 1;
+      document.getElementById("quantityID" + itemId).value = newQuantity;
+      document.getElementById("numberQty" + itemId).innerHTML = newQuantity;
+    }
+  }
+
+  function CheckUser(itemId) {
+    const userSession = localStorage.getItem("userID");
+
+    if (userSession == null) {
+      const timestamp = new Date().getTime(); // Get current timestamp
+      const random = Math.floor(Math.random() * 1000000); // Generate a random number
+      // Combine the timestamp and random number to create a unique ID
+      const userId = `${timestamp}${random}`;
+      localStorage.setItem("userID", userId);
+      let currentUser = localStorage.getItem("userID");
+
+      document.getElementById("userName" + itemId).value = currentUser;
+    } else {
+      let currentUser = localStorage.getItem("userID");
+      document.getElementById("userName" + itemId).value = currentUser;
+    }
+  }
+</script>

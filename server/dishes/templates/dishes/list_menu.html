@@ -1,0 +1,421 @@
+{% extends 'management/management_base.html' %}
+<!-- divider  -->
+{% load static %}
+<!-- divider  -->
+{% block content %}
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .btn_add {
+    background-color: var(--primary_color);
+    color: white;
+    border-radius: 12px;
+  }
+
+  .card_component {
+    border-radius: 12px;
+  }
+
+  .avatar {
+    vertical-align: middle;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 14px;
+  }
+
+  .btn_view {
+    background-color: var(--primary_color);
+    color: white;
+    border-radius: 12px;
+  }
+
+  .empty_img {
+    height: 100px;
+    width: 100%;
+    object-fit: contain;
+  }
+
+  .remove_btn {
+    border-radius: 12px;
+    border: none;
+  }
+
+  .hero_dish {
+    background-color: var(--secondary_color);
+    border-radius: 12px;
+  }
+</style>
+
+<!-- ======= Messages Notification  ======= -->
+<div class="container">
+  {% for message in messages %}
+  <div class="alert alert-success my-5" role="alert">{{message}}</div>
+  {% endfor %}
+</div>
+
+<!-- ======= Heading  ======= -->
+<section class="container mt-5">
+  <div class="row d-flex align-items-center">
+    <div class="col">
+      <h5 class="mb-0">Our Menu</h5>
+    </div>
+    <div class="col d-flex justify-content-end">
+      <a href="{% url 'add-new-item' %}">
+        <button class="btn btn_add shadow py-3">
+          <i class="bi bi-plus-circle-fill mx-2"></i> add new item
+        </button>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ======= Hero Dish  ======= -->
+<section class="container mt-5">
+  <div class="hero_dish py-4 px-3 shadow">
+    <div class="row d-flex align-items-center mb-3">
+      <div class="col">
+        <h5 class="mb-0 text-light fw-bold">Hero dish Sale</h5>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <button
+          class="btn btn-light px-5"
+          data-bs-toggle="modal"
+          data-bs-target="#heroDishModal"
+        >
+          create dish
+        </button>
+      </div>
+    </div>
+    <div class="d-flex">
+      <img src="{{hero_dish.cover_image.url}}" alt="" class="avatar shadow" />
+      <div>
+        <p class="mb-0">{{hero_dish.name}}</p>
+        <p class="mb-0 text-secondary">#{{hero_dish.reference}}</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container mt-5">
+  <div class="row">
+    <div class="col-6 mb-5">
+      <div class="bg-white p-3 shadow card_component h-100 pb-5">
+        <div class="row mb-5">
+          <div class="col">
+            <h5 class="mb-0">Dishes on sale</h5>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <button
+              class="btn btn-dark"
+              data-bs-toggle="modal"
+              data-bs-target="#exampleModal"
+            >
+              <i class="bi bi-plus-circle-fill mx-2"></i>create sale
+            </button>
+          </div>
+        </div>
+        {% for data in specials %}
+        <div class="row mb-4">
+          <div class="col">
+            <div class="d-flex">
+              <img
+                src="{{data.cover_image.url}}"
+                alt=""
+                class="avatar shadow"
+              />
+              <div>
+                <p class="mb-0">{{data.name}}</p>
+                <p class="mb-0 text-secondary">#{{data.reference}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <p class="mb-0">R{{data.sale_price}}</p>
+          </div>
+          <div class="col-2">
+            <form method="POST">
+              {% csrf_token %}
+              <input type="text" value="{{data.id}}" name="itemID" hidden />
+              <button
+                type="submit"
+                name="remove_special"
+                class="btn btn-secondary remove_btn"
+              >
+                remove
+              </button>
+            </form>
+          </div>
+        </div>
+        {% empty %}
+        <center>
+          <img
+            src="{% static '/images/empty_special.svg' %}"
+            alt=""
+            class="empty_img"
+          />
+          <h5 class="my-2">You currently have no items on sale</h5>
+        </center>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-6 mb-5">
+      <div class="bg-white p-3 shadow card_component h-100 pb-5">
+        <div class="row mb-5">
+          <div class="col">
+            <h5 class="mb-0">Popular Dishes</h5>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <button
+              class="btn btn-dark"
+              data-bs-toggle="modal"
+              data-bs-target="#popularModal"
+            >
+              <i class="bi bi-plus-circle-fill mx-2"></i>create popular dish
+            </button>
+          </div>
+        </div>
+        {% for data in popular_dishes %}
+        <div class="row mb-4">
+          <div class="col">
+            <div class="d-flex">
+              <img
+                src="{{data.cover_image.url}}"
+                alt=""
+                class="avatar shadow"
+              />
+              <div>
+                <p class="mb-0">{{data.name}}</p>
+                <p class="mb-0 text-secondary">#{{data.reference}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <p class="mb-0">R{{data.price}}</p>
+          </div>
+          <div class="col-2">
+            <form method="POST">
+              {% csrf_token %}
+              <input type="text" value="{{data.id}}" name="itemID" hidden />
+              <button
+                type="submit"
+                name="remove_popular"
+                class="btn btn-secondary remove_btn"
+              >
+                remove
+              </button>
+            </form>
+          </div>
+        </div>
+        {% empty %}
+        <center>
+          <img
+            src="{% static '/images/no_items.svg' %}"
+            alt=""
+            class="empty_img"
+          />
+          <h5 class="my-2">No popular items created yet</h5>
+        </center>
+        {% endfor %}
+      </div>
+    </div>
+    <div class="col-12 mb-5">
+      <div class="bg-white p-3 shadow card_component h-100 pb-5">
+        <h5 class="mb-5">Menu Items</h5>
+        {% for data in menuItems %}
+        <div class="row mb-4">
+          <div class="col">
+            <div class="d-flex">
+              <img
+                src="{{data.cover_image.url}}"
+                alt=""
+                class="avatar shadow"
+              />
+              <div>
+                <p class="mb-0">{{data.name}}</p>
+                <p class="mb-0 text-secondary">#{{data.reference}}</p>
+              </div>
+            </div>
+          </div>
+          <div class="col">
+            <p class="mb-0">R{{data.price}}</p>
+          </div>
+          <div class="col-2">
+            <button class="btn btn_view">view</button>
+          </div>
+        </div>
+        {% empty %}
+        <center>
+          <img
+            src="{% static '/images/popular.svg' %}"
+            alt=""
+            class="empty_img"
+          />
+          <h5 class="my-2">You currently have not created any menu items</h5>
+        </center>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= Sale Modal Start  ======= -->
+<div
+  class="modal fade"
+  id="exampleModal"
+  tabindex="-1"
+  aria-labelledby="exampleModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Create New Sale</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="p-3">
+          {% for data in menuItems %}
+          <div class="row mb-4">
+            <div class="col">
+              <div class="d-flex">
+                <img
+                  src="{{data.cover_image.url}}"
+                  alt=""
+                  class="avatar shadow"
+                />
+                <div>
+                  <p class="mb-0">{{data.name}}</p>
+                  <p class="mb-0 text-secondary">#{{data.reference}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-2">
+              <a href="{% url 'create-sale' data.id %}">
+                <button class="btn btn_view">select</button>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= Popular Modal Start  ======= -->
+<div
+  class="modal fade"
+  id="popularModal"
+  tabindex="-1"
+  aria-labelledby="popularModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="popularModalLabel">Create Popular Dish</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="p-3">
+          {% for data in menuItems %}
+          <div class="row mb-4">
+            <div class="col">
+              <div class="d-flex">
+                <img
+                  src="{{data.cover_image.url}}"
+                  alt=""
+                  class="avatar shadow"
+                />
+                <div>
+                  <p class="mb-0">{{data.name}}</p>
+                  <p class="mb-0 text-secondary">#{{data.reference}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-2">
+              <form method="POST">
+                {% csrf_token %}
+                <input type="text" value="{{data.id}}" name="itemID" hidden />
+                <button
+                  class="btn btn_view"
+                  name="submit_popular"
+                  type="submit"
+                >
+                  select
+                </button>
+              </form>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======= Hero Dish Modal  ======= -->
+<div
+  class="modal fade"
+  id="heroDishModal"
+  tabindex="-1"
+  aria-labelledby="heroDishModalLabel"
+  aria-hidden="true"
+>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="heroDishModalLabel">Create Hero Dish</h5>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="modal-body">
+        <div class="p-3">
+          {% for data in menuItems %}
+          <div class="row mb-4">
+            <div class="col">
+              <div class="d-flex">
+                <img
+                  src="{{data.cover_image.url}}"
+                  alt=""
+                  class="avatar shadow"
+                />
+                <div>
+                  <p class="mb-0">{{data.name}}</p>
+                  <p class="mb-0 text-secondary">#{{data.reference}}</p>
+                </div>
+              </div>
+            </div>
+            <div class="col-2">
+              <a href="{% url 'create-hero' data.id %}">
+                <button class="btn btn_view">select</button>
+              </a>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,231 @@
+{% extends 'client/base.html' %}
+<!-- divider  -->
+{% load static %}
+<!-- divider  -->
+{% block content %}
+
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .payment_card {
+    background-color: var(--primary_color);
+    border-radius: 12px;
+    width: 100%;
+  }
+
+  .payment_icon {
+    color: var(--primary_color);
+    font-size: 20px;
+  }
+
+  .circle {
+    background-color: var(
+      --secondary_color
+    ); /* Adjust background color as needed */
+    margin-right: 14px;
+  }
+
+  .form-check-input {
+    height: 25px;
+    width: 25px;
+    border-color: var(--primary_color);
+  }
+
+  .btn_submit {
+    background-color: var(--primary_color);
+    color: white;
+  }
+</style>
+<form method="POST" autocomplete="off">
+  {% csrf_token %}
+
+  <!-- =======  User Details  ======= -->
+  <section class="container mt-5">
+    <h5>Address</h5>
+    <p class="text-secondary">Please enter your Address</p>
+    <div class="row">
+      <div class="col-12 col-md-6 mb-3">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control bg-light"
+            id="floatingInput"
+            placeholder="Name"
+            name="firstName"
+            required
+          />
+          <label for="floatingInput">Name</label>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control bg-light"
+            id="floatingInput"
+            placeholder="Contact"
+            name="contact"
+            required
+          />
+          <label for="floatingInput">Contact</label>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control bg-light"
+            id="floatingInput"
+            placeholder="Street"
+            name="street"
+            required
+          />
+          <label for="floatingInput">Street</label>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control bg-light"
+            id="floatingInput"
+            placeholder="Suburb"
+            name="suburb"
+            required
+          />
+          <label for="floatingInput">Suburb</label>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control bg-light"
+            id="floatingInput"
+            placeholder="City"
+            name="city"
+            required
+          />
+          <label for="floatingInput">City</label>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <div class="form-floating">
+          <input
+            type="text"
+            class="form-control bg-light"
+            id="floatingInput"
+            placeholder="Postal Code"
+            name="postal_code"
+            required
+          />
+          <label for="floatingInput">Postal Code</label>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======  Payment Method  ======= -->
+  <section class="container mt-5">
+    <h5 class="mb-3">Select Payment Method</h5>
+    <div class="row">
+      <div class="col-12 col-md-6 mb-3">
+        <div class="payment_card bg-dark p-3">
+          <div class="row d-flex align-items-center">
+            <div class="col">
+              <div class="d-flex align-items-center">
+                <div class="circle px-3 py-2 rounded">
+                  <i class="bi bi-credit-card-fill payment_icon"></i>
+                </div>
+                <p class="mb-0 fw-bold text-light">Online</p>
+              </div>
+            </div>
+            <div class="col d-flex justify-content-end">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="payment_method"
+                id="online"
+                value="online"
+                required
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-12 col-md-6 mb-3">
+        <div class="payment_card bg-dark p-3">
+          <div class="row d-flex align-items-center">
+            <div class="col">
+              <div class="d-flex align-items-center">
+                <div class="circle px-3 py-2 rounded">
+                  <i class="bi bi-cash-coin payment_icon"></i>
+                </div>
+                <p class="mb-0 fw-bold text-light">Cash</p>
+              </div>
+            </div>
+            <div class="col d-flex justify-content-end">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="payment_method"
+                id="cash"
+                value="cash"
+                required
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- =======  Payment Method  ======= -->
+  <section class="container mt-5">
+    <h5 class="mb-4">Price Details</h5>
+    <div class="row mb-3">
+      <div class="col">
+        <p class="text-secondary mb-0">Subtotal</p>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <p class="fw-bold mb-0">R{{userCart.sub_total}}</p>
+      </div>
+    </div>
+    <!-- end item  -->
+    <div class="row mb-3">
+      <div class="col">
+        <p class="text-secondary mb-0">Delivery Fee</p>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <p class="fw-bold mb-0">R{{userCart.delivery_fee}}</p>
+      </div>
+    </div>
+    <!-- end item  -->
+    <div class="row mb-3">
+      <div class="col">
+        <p class="text-secondary mb-0">Total</p>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <h5 class="fw-bold mb-0">R{{userCart.total}}</h5>
+      </div>
+    </div>
+    <!-- end item  -->
+  </section>
+
+  <section class="container mt-5">
+    <center>
+      <button
+        type="submit"
+        name="submit_payment"
+        class="btn btn_submit px-5 py-3 fw-bold"
+      >
+        Submit Order
+      </button>
+    </center>
+  </section>
+</form>
+
+{% endblock %}

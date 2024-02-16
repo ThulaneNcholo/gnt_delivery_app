@@ -1,0 +1,33 @@
+{% load static %}
+<!-- divider  -->
+<style>
+  .ingredient_img {
+    height: 100px;
+    width: 100%;
+    object-fit: contain;
+  }
+</style>
+
+{% for item in ingredients_list %}
+<div class="form-check mb-3">
+  <input
+    class="form-check-input"
+    type="checkbox"
+    value="{{item}}"
+    id="flexCheckChecked"
+    name="checkedIngredients"
+    checked
+  />
+  <label class="form-check-label" for="flexCheckChecked"> {{item}} </label>
+</div>
+{% empty %}
+
+<center>
+  <img
+    src="{% static '/images/no_ingredients.svg' %}"
+    alt=""
+    class="ingredient_img mt-3"
+  />
+  <h5 class="mt-3">No Ingredients Created for item</h5>
+</center>
+{% endfor %}

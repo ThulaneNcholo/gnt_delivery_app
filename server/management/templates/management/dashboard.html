@@ -1,0 +1,305 @@
+{% extends 'management/management_base.html' %}
+<!-- divider  -->
+{% load static %}
+<!-- divider  -->
+{% block content %}
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .dashboard {
+    font-weight: bolder;
+  }
+
+  /* widgets style  */
+  .main_widget {
+    background-color: var(--secondary_color);
+    border-radius: 12px;
+  }
+
+  .secondary_widget {
+    background-color: white;
+    border-radius: 12px;
+  }
+
+  .circle_main {
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    border-radius: 50%;
+    background-color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+  }
+
+  .circle_secondary {
+    width: 50px; /* Adjust size as needed */
+    height: 50px; /* Adjust size as needed */
+    border-radius: 50%;
+    background-color: var(--secondary_color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+  }
+
+  .widget_icon_main {
+    color: var(--secondary_color);
+    font-size: 22px;
+  }
+
+  .widget_icon_secondary {
+    color: white;
+    font-size: 22px;
+  }
+
+  /* Orders Components  */
+  .table_container {
+    background-color: var(--primary_color);
+    color: white;
+    font-weight: bold;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+  }
+
+  .component_icon {
+    color: var(--secondary_color);
+    margin-right: 10px;
+  }
+
+  .view_btn {
+    font-size: 14px;
+    background-color: var(--secondary_color) !important;
+    border: none;
+  }
+
+  .empty_image {
+    height: 100px;
+    width: 100%;
+    object-fit: contain;
+  }
+</style>
+
+<!-- ======= Current Employee  ======= -->
+<section class="container pt-5">
+  <h5>Hi Jane</h5>
+  <h3 class="dashboard">Dashboard</h3>
+</section>
+
+<!-- ======= Dashboard Widgets  ======= -->
+<section class="container mt-5">
+  <div class="row">
+    <div class="col">
+      <div class="main_widget p-3 shadow">
+        <div class="d-flex">
+          <div class="circle_main">
+            <i class="bi bi-receipt-cutoff widget_icon_main"></i>
+          </div>
+          <div>
+            <h6 class="text-white">Pending Orders</h6>
+            <h5 class="text-white fw-bold">{{pendingCount}}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="secondary_widget p-3 shadow">
+        <div class="d-flex">
+          <div class="circle_secondary">
+            <i class="bi bi-truck widget_icon_secondary"></i>
+          </div>
+          <div>
+            <h6>Deliveries</h6>
+            <h5 class="fw-bold">{{deliveriesCount}}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col">
+      <div class="secondary_widget p-3 shadow">
+        <div class="d-flex">
+          <div class="circle_secondary">
+            <i class="bi bi-cart-check-fill widget_icon_secondary"></i>
+          </div>
+          <div>
+            <h6>Complete Orders</h6>
+            <h5 class="fw-bold">{{completeCount}}</h5>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= Orders Components  ======= -->
+<section class="container mt-5">
+  <div class="row">
+    <div class="col-6 mb-5">
+      <div class="pb-5 bg-white shadow h-100">
+        <div class="row table_container bg-dark mx-0 p-3 shadow">
+          <div class="col-12 mb-2">
+            <h5>Pending Orders</h5>
+          </div>
+          <div class="col">
+            <h6 class="mb-0">Order</h6>
+          </div>
+          <div class="col">
+            <h6 class="mb-0">Total</h6>
+          </div>
+          <div class="col">
+            <h6 class="mb-0">Payment</h6>
+          </div>
+          <div class="col-2">
+            <h6 class="mb-0">view</h6>
+          </div>
+        </div>
+        <!-- end table heading  -->
+        {% for data in pending_orders %}
+        <div class="row table_row mx-0 p-3 shadow-sm bg-white">
+          <div class="col">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-receipt component_icon"></i>
+              <p class="mb-0">{{data.orderNumber}}</p>
+            </div>
+          </div>
+          <div class="col">
+            <p class="mb-0">R{{data.total}}</p>
+          </div>
+          <div class="col">
+            <p class="mb-0">{{data.payment_status}}</p>
+          </div>
+          <div class="col-2">
+            <a href="{% url 'order' data.id %}">
+              <button class="btn btn-dark rounded-pill view_btn">view</button>
+            </a>
+          </div>
+        </div>
+        {% empty %}
+        <center>
+          <img
+            src="{% static '/images/no_ingredients.svg' %}"
+            alt=""
+            class="empty_image mt-3"
+          />
+          <h6 class="my-3">No Pending Orders</h6>
+        </center>
+        {% endfor %}
+        <!-- end item  -->
+      </div>
+    </div>
+    <!--********* end pending items  ******** -->
+    <div class="col-6 mb-5">
+      <div class="pb-5 bg-white shadow h-100">
+        <div class="row table_container bg-dark mx-0 p-3 shadow">
+          <div class="col-12 mb-2">
+            <h5>Deliveries</h5>
+          </div>
+          <div class="col">
+            <h6 class="mb-0">Order</h6>
+          </div>
+          <div class="col">
+            <h6 class="mb-0">Total</h6>
+          </div>
+          <div class="col">
+            <h6 class="mb-0">Payment</h6>
+          </div>
+          <div class="col-2">
+            <h6 class="mb-0">view</h6>
+          </div>
+        </div>
+        <!-- end table heading  -->
+        {% for data in deliveries_orders %}
+        <div class="row table_row mx-0 p-3 shadow-sm bg-white">
+          <div class="col">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-receipt component_icon"></i>
+              <p class="mb-0">{{data.orderNumber}}</p>
+            </div>
+          </div>
+          <div class="col">
+            <p class="mb-0">R{{data.total}}</p>
+          </div>
+          <div class="col">
+            <p class="mb-0">{{data.payment_status}}</p>
+          </div>
+          <div class="col-2">
+            <a href="{% url 'order' data.id %}">
+              <button class="btn btn-dark rounded-pill view_btn">view</button>
+            </a>
+          </div>
+        </div>
+        {% empty %}
+        <center>
+          <img
+            src="{% static '/images/no_ingredients.svg' %}"
+            alt=""
+            class="empty_image mt-3"
+          />
+          <h6 class="my-3">No current deliveries</h6>
+        </center>
+        {% endfor %}
+        <!-- end item  -->
+      </div>
+    </div>
+    <!--******* end deliveries items  ******** -->
+    <div class="col-6 mb-5">
+      <div class="pb-5 bg-white shadow h-100">
+        <div class="row table_container bg-dark mx-0 p-3 shadow">
+          <div class="col-12 mb-2">
+            <h5>Complete Orders</h5>
+          </div>
+          <div class="col">
+            <h6 class="mb-0">Order</h6>
+          </div>
+          <div class="col">
+            <h6 class="mb-0">Total</h6>
+          </div>
+          <div class="col">
+            <h6 class="mb-0">Payment</h6>
+          </div>
+          <div class="col-2">
+            <h6 class="mb-0">view</h6>
+          </div>
+        </div>
+        <!-- end table heading  -->
+        {% for data in complete_orders %}
+        <div class="row table_row mx-0 p-3 shadow-sm bg-white">
+          <div class="col">
+            <div class="d-flex align-items-center">
+              <i class="bi bi-receipt component_icon"></i>
+              <p class="mb-0">{{data.orderNumber}}</p>
+            </div>
+          </div>
+          <div class="col">
+            <p class="mb-0">R{{data.total}}</p>
+          </div>
+          <div class="col">
+            <p class="mb-0">{{data.payment_status}}</p>
+          </div>
+          <div class="col-2">
+            <a href="{% url 'order' data.id %}">
+              <button class="btn btn-dark rounded-pill view_btn">view</button>
+            </a>
+          </div>
+        </div>
+        {% empty %}
+        <center>
+          <img
+            src="{% static '/images/no_ingredients.svg' %}"
+            alt=""
+            class="empty_image mt-3"
+          />
+          <h6 class="my-3">No Complete Orders</h6>
+        </center>
+        {% endfor %}
+        <!-- end item  -->
+      </div>
+    </div>
+    <!--******* end complete deliveries  ******** -->
+  </div>
+</section>
+
+{% endblock %}

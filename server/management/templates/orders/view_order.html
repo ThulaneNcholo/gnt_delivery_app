@@ -1,0 +1,214 @@
+{% extends 'management/management_base.html' %}
+<!-- divider  -->
+{% load static %}
+<!-- divider  -->
+{% block content %}
+
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .order_card {
+    background-color: var(--secondary_color);
+    border-radius: 12px;
+    color: white;
+  }
+
+  .order_items_card {
+    background-color: white;
+    border-radius: 12px;
+  }
+
+  .cover_image {
+    height: 70px;
+    width: 70px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+
+  .circle_count {
+    width: 40px; /* Adjust size as needed */
+    height: 40px; /* Adjust size as needed */
+    border-radius: 50%;
+    background-color: var(--primary_color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 15px;
+  }
+
+  .button_style {
+    border-radius: 12px;
+  }
+
+  .complete_btn {
+    background-color: var(--primary_color);
+    border-radius: 12px;
+    color: white !important;
+  }
+
+  .removed_icon {
+    color: var(--primary_color);
+    margin-right: 10px;
+  }
+
+  .back_arrow {
+    font-size: 22px;
+    color: var(--primary_color);
+    cursor: pointer;
+  }
+</style>
+
+<!-- ======= Messages Notification  ======= -->
+<div class="container">
+  {% for message in messages %}
+  <div class="alert alert-success my-5" role="alert">{{message}}</div>
+  {% endfor %}
+</div>
+
+<section class="container mt-5">
+  <i
+    class="bi bi-arrow-left-square-fill back_arrow"
+    onclick="history.back()"
+  ></i>
+</section>
+
+<!-- ======= Order Options  ======= -->
+<section class="container mt-5">
+  <h5 class="mb-3">Order Steps</h5>
+  <p class="text-secondary">click options below to update the order status</p>
+  <form method="POST">
+    {% csrf_token %}
+    <div class="d-flex mb-5">
+      <button
+        type="submit"
+        name="submit_delivery"
+        class="btn btn-dark py-2 button_style"
+      >
+        Mark out for delivery
+      </button>
+      <button
+        type="submit"
+        name="submit_complete"
+        class="btn py-2 btn-warning button_style mx-2 border-0"
+      >
+        Mark Complete
+      </button>
+      <!-- <button type="submit" class="btn btn-secondary py-2 button_style">
+        Order complete
+      </button> -->
+    </div>
+  </form>
+</section>
+
+<!-- ======= Order Reference  ======= -->
+<section class="container mt-5">
+  <div class="row">
+    <div class="col-6">
+      <div class="order_card p-3 shadow h-100">
+        <div class="row mb-3">
+          <div class="col">
+            <p class="mb-0">Customer</p>
+          </div>
+          <div class="col">
+            <p class="mb-0">{{order.customer.firstName}}</p>
+          </div>
+        </div>
+        <!-- end item  -->
+        <div class="row mb-3">
+          <div class="col">
+            <p class="mb-0">Contact</p>
+          </div>
+          <div class="col">
+            <p class="mb-0">{{order.customer.contact}}</p>
+          </div>
+        </div>
+        <!-- end item  -->
+        <div class="row mb-3">
+          <div class="col">
+            <p class="mb-0">Street</p>
+          </div>
+          <div class="col">
+            <p class="mb-0">{{order.customer.street}}</p>
+          </div>
+        </div>
+        <!-- end item  -->
+        <div class="row mb-3">
+          <div class="col">
+            <p class="mb-0">Suburb</p>
+          </div>
+          <div class="col">
+            <p class="mb-0">{{order.customer.suburb}}</p>
+          </div>
+        </div>
+        <!-- end item  -->
+        <div class="row mb-3">
+          <div class="col">
+            <p class="mb-0">City</p>
+          </div>
+          <div class="col">
+            <p class="mb-0">{{order.customer.city}}</p>
+          </div>
+        </div>
+        <!-- end item  -->
+        <div class="row mb-3">
+          <div class="col">
+            <p class="mb-0">Postal Code</p>
+          </div>
+          <div class="col">
+            <p class="mb-0">{{order.customer.postal_code}}</p>
+          </div>
+        </div>
+        <!-- end item  -->
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="order_card p-3 shadow h-100">
+        <h5 class="mb-3">Order - {{order.orderNumber}}</h5>
+        <h5 class="fw-bold">Status - {{order.status}}</h5>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ======= Order Items  ======= -->
+<section class="container mt-5">
+  {% for data in order_items %}
+  <div class="order_items_card p-3 shadow mb-3">
+    <div class="row mb-4">
+      <div class="col">
+        <div class="d-flex">
+          <img src="{{data.item.cover_image.url}}" alt="" class="cover_image" />
+          <div>
+            <p class="mb-0 fw-bold">{{data.item.name}}</p>
+            <p class="text-secondary">
+              {{data.item.description|truncatewords:10}}
+            </p>
+          </div>
+        </div>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <div class="circle_count mb-3">
+          <h6 class="mb-0 fw-bold">{{ forloop.counter }}</h6>
+        </div>
+      </div>
+    </div>
+    <p>Removed Ingredients</p>
+    {% for ingredient in data.item_ingredients.all %}
+    <!-- divider  -->
+    {% if ingredient.status == "off"%}
+    <div class="d-flex mb-3">
+      <i class="bi bi-arrow-right-circle-fill removed_icon"></i>
+      <p class="mb-0">{{ingredient.item.name}}</p>
+    </div>
+    {% endif %}
+    <!-- divider  -->
+    {% endfor %}
+  </div>
+  {% endfor %}
+</section>
+
+{% endblock %}

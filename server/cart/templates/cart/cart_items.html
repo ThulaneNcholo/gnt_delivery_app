@@ -1,0 +1,250 @@
+{% extends 'client/base.html' %}
+<!-- divider  -->
+{% load static %}
+<!-- divider  -->
+{% block content %}
+
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .cart_img {
+    height: 80px;
+    width: 80px;
+    border-radius: 12px;
+    object-fit: cover;
+    margin-right: 12px;
+  }
+
+  .btn_update {
+    background-color: var(--secondary_color);
+    color: white;
+    font-size: 14px;
+  }
+
+  .description_text {
+    font-size: 14px;
+  }
+
+  .btn_checkout {
+    background-color: var(--primary_color);
+    color: white;
+    border-radius: 12px;
+  }
+
+  .offcanvas-bottom {
+    height: 70vh;
+    border-top-right-radius: 12px;
+    border-top-left-radius: 12px;
+  }
+
+  .ingredient_icon {
+    color: var(--secondary_color);
+    margin-right: 15px;
+    font-size: 20px;
+  }
+
+  .form-check-input {
+    height: 20px;
+    width: 20px;
+    border-color: var(--primary_color);
+  }
+
+  .success_img {
+    height: 300px;
+    width: 300px;
+    object-fit: contain;
+  }
+
+  .button_fonts {
+    font-size: 14px;
+  }
+
+  .back_arrow {
+    font-size: 22px;
+    color: var(--primary_color);
+    cursor: pointer;
+  }
+</style>
+
+<section class="container mt-5">
+  <i
+    class="bi bi-arrow-left-square-fill back_arrow"
+    onclick="history.back()"
+  ></i>
+</section>
+
+<section class="container mt-5">
+  <h4>My Cart</h4>
+</section>
+
+{% if userCart %}
+<!-- =======  Items  ======= -->
+<section class="container mt-5">
+  <div class="row">
+    {% for data in cartItems %}
+    <div class="col-12 col-md-6 col-lg-4 mb-5">
+      <div class="d-flex w-100">
+        <img src="{{data.item.cover_image.url}}" alt="" class="cart_img" />
+        <div class="w-100">
+          <h6 class="mb-2">{{data.item.name}}</h6>
+          <h5 class="mb-3 fw-bold">R{{data.sold_price}}</h5>
+
+          <div class="row d-flex align-items-center">
+            <div class="col">
+              <div class="d-flex">
+                <button
+                  class="btn btn_update d-block d-md-none button_fonts"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#updateOffcanvas{{data.id}}"
+                  aria-controls="updateOffcanvas"
+                >
+                  update
+                </button>
+
+                <button
+                  class="btn btn_update d-none d-md-block button_fonts"
+                  data-bs-toggle="offcanvas"
+                  data-bs-target="#updatelargeScreenOffcanvas{{data.id}}"
+                  aria-controls="updatelargeScreenOffcanvas"
+                >
+                  update
+                </button>
+                <div>
+                  <form method="POST">
+                    {% csrf_token %}
+                    <input
+                      type="text"
+                      value="{{data.id}}"
+                      hidden
+                      name="item_id"
+                    />
+                    <button
+                      type="submit"
+                      name="remove_item"
+                      class="btn btn-secondary button_fonts"
+                      style="margin-left: 10px"
+                    >
+                      remove
+                    </button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =======  Update Order Offcanvas small screen  ======= -->
+    <div
+      class="offcanvas offcanvas-bottom"
+      tabindex="-1"
+      id="updateOffcanvas{{data.id}}"
+      aria-labelledby="updateOffcanvasLabel"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="updateOffcanvasLabel">
+          {{data.item.name}}
+        </h5>
+        <button
+          type="button"
+          class="btn-close text-reset"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <p class="mb-4 text-secondary">
+          Please select which ingredients you would like removed
+        </p>
+        {% include 'partials/update_partial.html' %}
+      </div>
+    </div>
+
+    <!-- =======  Update Order Offcanvas Large screen  ======= -->
+    <div
+      class="offcanvas offcanvas-start"
+      tabindex="-1"
+      id="updatelargeScreenOffcanvas{{data.id}}"
+      aria-labelledby="updatelargeScreenOffcanvasLabel"
+    >
+      <div class="offcanvas-header">
+        <h5 class="offcanvas-title" id="updatelargeScreenOffcanvasLabel">
+          {{data.item.name}}
+        </h5>
+        <button
+          type="button"
+          class="btn-close text-reset"
+          data-bs-dismiss="offcanvas"
+          aria-label="Close"
+        ></button>
+      </div>
+      <div class="offcanvas-body">
+        <p class="mb-4 text-secondary">
+          Please select which ingredients you would like removed
+        </p>
+        {% include 'partials/update_partial.html' %}
+      </div>
+    </div>
+
+    {% endfor %}
+    <!-- end item  -->
+  </div>
+</section>
+
+<!-- =======  Notes about order  ======= -->
+<form method="POST" autocomplete="off">
+  {% csrf_token %}
+  <section class="container mt-5">
+    <div class="mb-3">
+      <label for="exampleFormControlTextarea1" class="form-label"
+        >Notes about order</label
+      >
+      <textarea
+        class="form-control bg-light"
+        id="exampleFormControlTextarea1"
+        rows="5"
+        name="notes"
+      ></textarea>
+    </div>
+  </section>
+
+  <section class="container mt-5">
+    <div class="row">
+      <div class="col">
+        <h6 class="text-secondary">Subtotal</h6>
+      </div>
+      <div class="col d-flex justify-content-end">
+        <h6 class="fw-bold">R{{userCart.sub_total}}</h6>
+      </div>
+    </div>
+    <hr />
+    <center>
+      <button
+        type="submit"
+        name="check_out"
+        class="btn btn_checkout px-5 py-2 mt-4 shadow"
+      >
+        Checkout items
+      </button>
+    </center>
+  </section>
+</form>
+{% else %}
+<center>
+  <img
+    src="{% static '/images/empty_cart.svg' %}"
+    alt=""
+    class="success_img mb-3"
+  />
+  <h5 class="mb-4">Your cart is currently empty start shopping now</h5>
+  <a href="{% url 'index' %}">
+    <button class="btn btn_update">Browse Menu</button>
+  </a>
+</center>
+{% endif %}
+<!-- divider  -->
+{% endblock %}

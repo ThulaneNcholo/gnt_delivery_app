@@ -1,0 +1,178 @@
+{% extends 'client/base.html' %}
+<!-- divider  -->
+{% load static %}
+<!-- divider  -->
+{% block content %}
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .success_img {
+    height: 300px;
+    width: 300px;
+    object-fit: contain;
+  }
+
+  .section_spacing {
+    padding-top: 50px;
+  }
+
+  .card_component {
+    background-color: var(--secondary_color);
+    border-radius: 12px;
+  }
+
+  .back_icon {
+    color: var(--secondary_color);
+    font-size: 22px;
+    cursor: pointer;
+  }
+</style>
+
+<section class="container mt-5">
+  <i
+    class="bi bi-arrow-left-square-fill back_icon"
+    onclick="history.back()"
+  ></i>
+</section>
+
+<!-- =======  status header ======= -->
+<section class="container mt-5">
+  <center>
+    {% if userCart.status == "Pending" %}
+    <img src="{% static '/images/cooking.svg' %}" alt="" class="success_img" />
+    <h5 class="fw-bold my-3">Your order is being prepared.</h5>
+    {% elif userCart.status == "Delivery" %}
+    <img
+      src="{% static '/images/delivery_image.svg' %}"
+      alt=""
+      class="success_img"
+    />
+    <h5 class="fw-bold my-3">Your order is out for delivery.</h5>
+    {% elif userCart.status == "Complete" %}
+    <img src="{% static '/images/complete.svg' %}" alt="" class="success_img" />
+    <h5 class="fw-bold my-3">Order complete</h5>
+    <h5 class="fw-bold my-3">Thank you for choosing us.</h5>
+    {% endif %}
+
+    <h6 class="fw-bold mb-3">Order - {{userCart.orderNumber}}</h6>
+    <p class="mb-5">
+      Payment - {{userCart.payment_method}} - {{userCart.payment_status}}
+    </p>
+  </center>
+</section>
+
+<section class="container section_spacing">
+  <div class="row">
+    <div class="col-12 col-md-6 mb-5">
+      <div class="p-3 card_component h-100">
+        <h5 class="mb-4">Items</h5>
+        {% for data in cartItems %}
+        <div class="row mb-3">
+          <div class="col">
+            <p class="text-white fw-bold mb-0">{{data.item.name}}</p>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <p class="fw-bold mb-0">R{{data.sold_price}}</p>
+          </div>
+        </div>
+        {% endfor %}
+        <hr />
+
+        <div class="mt-4">
+          <div class="row mb-3">
+            <div class="col">
+              <p class="text-white fw-bold mb-0">Subtotal</p>
+            </div>
+            <div class="col d-flex justify-content-end">
+              <p class="fw-bold mb-0 dark_style_font">
+                R{{userCart.sub_total}}
+              </p>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <p class="text-white fw-bold mb-0">Delivery Fee</p>
+            </div>
+            <div class="col d-flex justify-content-end">
+              <p class="fw-bold mb-0 dark_style_font">
+                R{{userCart.delivery_fee}}
+              </p>
+            </div>
+          </div>
+          <div class="row mb-3">
+            <div class="col">
+              <p class="text-white fw-bold mb-0">Total</p>
+            </div>
+            <div class="col d-flex justify-content-end">
+              <p class="fw-bold mb-0 dark_style_font">R{{userCart.total}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6 mb-5">
+      <div class="p-3 card_component h-100">
+        <h5 class="mb-4">Address</h5>
+        <div class="row mb-3">
+          <div class="col">
+            <p class="text-white fw-bold mb-0">contact</p>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <p class="fw-bold mb-0 dark_style_font">
+              {{userCart.customer.contact}}
+            </p>
+          </div>
+        </div>
+        <div class="row mb-3">
+          <div class="col">
+            <p class="text-white fw-bold mb-0">Street</p>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <p class="fw-bold mb-0 dark_style_font">
+              {{userCart.customer.street}}
+            </p>
+          </div>
+        </div>
+        <!-- end item  -->
+        <div class="row mb-3">
+          <div class="col">
+            <p class="text-white fw-bold mb-0">Suburb</p>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <p class="fw-bold mb-0 dark_style_font">
+              {{userCart.customer.suburb}}
+            </p>
+          </div>
+        </div>
+        <!-- end item  -->
+        <div class="row mb-3">
+          <div class="col">
+            <p class="text-white fw-bold mb-0">City</p>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <p class="fw-bold mb-0 dark_style_font">
+              {{userCart.customer.city}}
+            </p>
+          </div>
+        </div>
+        <!-- end item  -->
+        <div class="row mb-3">
+          <div class="col">
+            <p class="text-white fw-bold mb-0">Postal Code</p>
+          </div>
+          <div class="col d-flex justify-content-end">
+            <p class="fw-bold mb-0 dark_style_font">
+              {{userCart.customer.postal_code}}
+            </p>
+          </div>
+        </div>
+        <!-- end item  -->
+      </div>
+    </div>
+  </div>
+</section>
+
+{% endblock %}

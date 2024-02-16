@@ -1,0 +1,63 @@
+<style>
+  .bottom_nav_card {
+    background-color: var(--primary_color);
+    margin-bottom: 34px;
+    border-radius: 17px;
+  }
+
+  .nav_icons {
+    font-size: 22px;
+  }
+
+  .cart_btn {
+    background-color: transparent;
+    border: 0px;
+  }
+</style>
+
+<div class="bg-white fixed-bottom pt-3 d-block d-md-none">
+  <div class="bottom_nav_card mx-2 py-2">
+    <div class="d-flex justify-content-around">
+      <a href="{% url 'index'%}">
+        <div>
+          <center>
+            <i class="bi bi-house text-white nav_icons"></i>
+          </center>
+        </div>
+      </a>
+      <!-- end nav item  -->
+      <a href="{% url 'specials' %}">
+        <div>
+          <center>
+            <i class="bi bi-grid text-white nav_icons"></i>
+          </center>
+        </div>
+      </a>
+      <!-- end nav item  -->
+      <div>
+        <center>
+          <a href="{% url 'basket-items' %}">
+            <button class="position-relative cart_btn">
+              <i class="bi bi-cart text-white nav_icons"></i>
+              <span
+                id="orderCount"
+                class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger"
+              >
+                {{cartCount}}
+              </span>
+            </button>
+          </a>
+        </center>
+      </div>
+      <!-- end nav item  -->
+      <a href="{% url 'customer-orders' %}">
+        <div>
+          <center>
+            <i class="bi bi-person text-white nav_icons"></i>
+          </center>
+        </div>
+      </a>
+      <!-- end nav item  -->
+    </div>
+  </div>
+</div>

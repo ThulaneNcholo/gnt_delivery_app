@@ -1,0 +1,72 @@
+<style>
+  :root {
+    --primary_color: black;
+    --secondary_color: #0bcb76;
+  }
+
+  .navbar_style {
+    background-color: var(--primary_color) !important;
+  }
+</style>
+<nav
+  class="navbar navbar-expand-lg navbar-light navbar_style py-4 fixed-top shadow"
+>
+  <div class="container">
+    <a class="navbar-brand fw-bold text-white" href="{% url 'index' %}"
+      >GNT Delivery</a
+    >
+    <button
+      class="navbar-toggler border-white"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <i class="bi bi-list text-white py-2"></i>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a
+            class="nav-link active text-light"
+            aria-current="page"
+            href="{% url 'index' %}"
+            >Home</a
+          >
+        </li>
+        <li class="nav-item">
+          <a
+            class="nav-link active text-light"
+            aria-current="page"
+            href="{% url 'specials' %}"
+            >Specials</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light" href="{% url 'basket-items' %}"
+            >Cart <span class="badge bg-danger">{{cartCount}}</span></a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light" href="{% url 'customer-orders' %}"
+            >My Orders</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link text-light" href="{% url 'dashboard' %}"
+            >Dashboard</a
+          >
+        </li>
+      </ul>
+      <div class="d-flex">
+        <a href="{% url 'specials' %}">
+          <button class="btn btn-light px-3" style="border-radius: 12px">
+            Browse specials
+          </button>
+        </a>
+      </div>
+    </div>
+  </div>
+</nav>
